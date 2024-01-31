@@ -7,6 +7,80 @@
     filter: brightness(90%);
 }
 
+.w-17por:active{
+    transform: scale(0.9);
+    filter: brightness(70%);
+}
+
 .h-m{
     height: 90vh;
+}
+
+.imagen-verde{
+
+    background: radial-gradient(rgb(0, 177, 0),rgb(52, 114, 52));
+    
+}
+.fondo-gris{
+    background: radial-gradient(rgb(201, 182, 122), rgb(121, 101, 75));
+}
+
+.h-vhh{
+    height: 70vh;
+}
+
+
+.bg-foto{
+    background: url(img/fondo.jpeg);
+    background-position-y: -48%;
+    background-position-x: 22%;
+}
+
+.fichas{
+    width: 100%;
+    
+    
+}
+.img-cartas{
+    width: 100px;
+}
+
+.left-0por{
+    left: 40%;
+}
+
+.left-1por{
+    left: 43%;
+}
+
+.left-2por{
+    left: 46%;
+}
+
+.left-3por{
+    left: 49%;
+}
+
+.left-4por{
+    left: 52%;
+}
+
+.left-5por{
+    left: 54%;
+}
+
+.left-6por{
+    left: 56%;
+}
+
+.left-7por{
+    left: 58%;
+}
+
+
+.hovercartas{
+    transition: all .2s;
+}
+.hovercartas:hover{
+    transform: scale(1.1);
 }
