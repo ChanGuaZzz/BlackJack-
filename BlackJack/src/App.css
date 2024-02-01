@@ -31,7 +31,7 @@
 }
 
 .h-vhh{
-    height: 70vh;
+    height: 80vh;
 }
 
 
@@ -40,6 +40,11 @@
 }
 .Carta-negra{
     filter: brightness(1%);
+}
+
+.flex-direction-col{
+    
+    flex-direction: column;
 }
 
 .text-shadow{
@@ -93,4 +98,31 @@
 }
 .hovercartas:hover{
     transform: scale(1.1);
+}
+
+.gifperdiste{
+background-image:  url(img/pierdes.gif);
+background-position: center;
+background-size: cover;
+}
+
+.gifganaste{
+    background-image:  url(img/ganas.gif);
+    background-position: center;
+    
+    background-size: cover;
+    
+}
+
+.gifempate{
+    background-image:  url(img/empate.gif);
+    background-position: center;
+    
+    background-size: cover;
+    
+}
+
+.borroso{
+    backdrop-filter: blur(10px);
+    background-color: #0000008e;
 }

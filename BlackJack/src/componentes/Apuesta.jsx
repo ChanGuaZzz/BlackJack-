@@ -7,7 +7,8 @@ import { useState } from "react";
 
 export function Apuesta({ visible, dinero, funcionSetDinero, empezarJuego, apuesta, setApuesta }) {
   
-  
+  const [mensaje,setMensaje]=useState(false);
+  const [animacion,setanimacion]=useState("");
 
   const apostar = (ficha) => {
     if (dinero >= ficha) {
@@ -30,6 +31,28 @@ export function Apuesta({ visible, dinero, funcionSetDinero, empezarJuego, apues
     
   };
 
+  const comprobarapuesta = () => {
+    if (apuesta <= 0){
+
+      if(!mensaje){
+        setMensaje(true)
+      }else{
+
+        setanimacion("animate__animated animate__tada")
+        setTimeout(()=>{
+          setanimacion("")
+        },1000);
+      }
+      
+  }else{
+    empezarJuego();
+
+  }
+        
+        
+    
+  };
+
   return (
     <>
       <div
@@ -43,13 +66,15 @@ export function Apuesta({ visible, dinero, funcionSetDinero, empezarJuego, apues
           <div className="text-shadow min-w-full h-1 mt-5 text-white font-bold text-4xl">
             Apuesta: {apuesta} 
           </div>
+          
+          
           <button onClick={deshacer} className="min-w-52 bg-red-600 w-1/6 h-10 text-white font-semibold rounded-full transition-all w-17por ">Deshacer </button>
           <div className=" text-shadow min-w-full h-1 mt-5 text-white font-bold text-2xl">
             Dinero: {dinero}
           </div>
           <div className="min-w-full h-0">
             <button
-              onClick={empezarJuego}
+              onClick={comprobarapuesta}
               className="min-w-32 bg-foto w-1/6 h-10 text-white rounded-full transition-all w-17por "
             >
               Empezar juego
@@ -59,6 +84,7 @@ export function Apuesta({ visible, dinero, funcionSetDinero, empezarJuego, apues
             <div className=" text-xl font-extrabold text-shadow">Fichas</div>
             <div className="flex justify-center items-center h-full m-5">
               <div className="flex flex-wrap items-center justify-center bg-green-950 w-full h-full rounded-xl">
+              {mensaje?<h1 className={`text-red-700 mt-2 ${animacion}  w-full font-semibold text-2xl`}>Pon una apuesta</h1>:""}
                 <div className="h-full w-1/5">
                   <button
                     className="w-17por"

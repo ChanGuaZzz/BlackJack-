@@ -64,8 +64,7 @@ export function BlackJack({
   visible,
   apuesta,
   iniciardenuevo,
-  
-  
+  funcionmodal,
 }) {
   const cartas = [
     { img: AsCorazones, valor: 11 },
@@ -129,66 +128,88 @@ export function BlackJack({
     return numero;
   };
 
-  const gana=()=>{
-    setDinero(dinero+(apuesta*2));
-  }
-
-  const empate=()=>{
-    setDinero(dinero+apuesta);
-  }
-  
+ 
 
   const [cartasCrupier, setcartasCrupier] = useState([cartas[numerorandom()]]);
   const [cartasJugador, setcartasJugador] = useState([cartas[numerorandom()]]);
   const [sumacrupier, setsumacrupier] = useState(0);
-  const [sumaJugador, setsumaJugador] = useState(cartasJugador.reduce(
-    (total, element) => total + element.valor,
-    0
-  ));
+  const [sumaJugador, setsumaJugador] = useState(
+    cartasJugador.reduce((total, element) => total + element.valor, 0)
+  );
+  const [modal, setmodal] = useState(false);
   const [turnocrupier, setturnoCrupier] = useState(false);
+  const [mensajemodal, setMensajemodal] = useState("");
+  const [estadopartida, setestadopartida] = useState(0);
 
-  useEffect(()=>{
-    setcartasCrupier([cartas[numerorandom()]]);
+  useEffect(() => {
+
+    funcionmodal(modal);
+    
+  }, [modal]);
+
+
+  //INICIALIZA  LA PARTIDA Y LLEGA A SU ESTADO INCIAL
+  useEffect(() => {
+    setcartasCrupier([cartas[numerorandom()],cartas[numerorandom()]]);
     setcartasJugador([cartas[numerorandom()]]);
     setsumacrupier(0);
-    setsumaJugador(cartasJugador.reduce(
-      (total, element) => total + element.valor,
-      0
-    ));
+    setsumaJugador(
+      cartasJugador.reduce((total, element) => total + element.valor, 0)
+    );
     setturnoCrupier(false);
-  },[visible]);
+    setmodal(false)
 
-  
+    console.log("se ejecuta al iniciar");
+  }, [visible]);
 
-
+//FUNCION CRUPIER Y COMPRUEBA VICTORIA
   useEffect(() => {
     const suma = cartasCrupier.reduce(
       (total, element) => total + element.valor,
       0
     );
     setsumacrupier(suma);
-    console.log(cartasCrupier);
-    if(empieza&&turnocrupier) {
-   if(suma<17){
-pedircrupier()
-   }else{
-    if(suma>sumaJugador&&suma<=21){
-      console.log("Perdiste contra el crupier")
-
-    }else if(suma>21){
-      console.log("Ganaste, el crupier se ha pasado")
-      gana();
-    }else if(suma==sumaJugador){
-      console.log("EMPATE")
-empate();
-    }else{
-      console.log("LE HAS GANADO AL GRUPIER")
-      gana();
+    console.log("cartas crupier",cartasCrupier);
+    if (empieza && turnocrupier) {
+      if (suma < 17) {
+        pedircrupier();
+      } else {
+        if (suma > sumaJugador && suma <= 21) {
+          console.log("Perdiste contra el crupier");
+          setMensajemodal("Perdiste contra el crupier");
+          setestadopartida(2);
+          setTimeout(()=>{
+            setmodal(true);
+          },1200);
+        } else if (suma > 21) {
+          console.log("Ganaste, el crupier se ha pasado");
+          gana();
+          setMensajemodal("Ganaste, el crupier se ha pasado");
+          setestadopartida(1);
+          setTimeout(()=>{
+            setmodal(true);
+          },1200);
+        } else if (suma == sumaJugador) {
+          console.log("EMPATE");
+          setMensajemodal("Empate");
+          setestadopartida(0);
+          empate();
+          setTimeout(()=>{
+            setmodal(true);
+          },1200);
+        } else {
+          console.log("LE HAS GANADO AL GRUPIER");
+          gana();
+          setMensajemodal("Le has ganado al crupier");
+          setestadopartida(1);
+          setTimeout(()=>{
+            setmodal(true);
+          },1200);
+          
+        }
+      }
     }
-   }
-  }
   }, [cartasCrupier]);
-
 
   useEffect(() => {
     const suma = cartasJugador.reduce(
@@ -200,48 +221,48 @@ empate();
     if (suma > 21) {
       console.log("PERDISTE TE PASASTE");
       setturnoCrupier(true);
-    }else if (suma == 21) {
-      console.log("BLACKJACK")
+      setestadopartida(2);
+      setMensajemodal("Perdiste, te has pasado");
+      setTimeout(()=>{
+        setmodal(true);
+      },1200);
+    } else if (suma == 21) {
+      console.log("BLACKJACK");
+      setturnoCrupier(true)
+      setestadopartida(1);
+      setMensajemodal("BlackJack");
+      setTimeout(()=>{
+        setmodal(true);
+      },1200);
       gana();
     }
-    
   }, [cartasJugador]);
 
-  //SE EJECUTA AUTOMATICAMENTE AL INICIAR
-  useEffect(() => {
-    const cartainicialCrupier = numerorandom();
+  
 
-    const cartainicialJugador = numerorandom();
+  const gana = () => {
+    setDinero(dinero + apuesta * 2);
+  };
 
-    setcartasCrupier([...cartasCrupier, cartas[cartainicialCrupier]]);
-
-    console.log(cartasCrupier[0].valor);
-  }, []);
+  const empate = () => {
+    setDinero(dinero + apuesta);
+  };
 
   const pedircrupier = () => {
-    
-    setturnoCrupier(true);
-    if (sumacrupier < 17) {
-      const cartanueva = numerorandom();
-      setcartasCrupier([...cartasCrupier, cartas[cartanueva]]);
-      
-    //   if (sumacrupier < 17) {
-      
-    //     pedircrupier();
-    //     console.log(cartasCrupier);
-      
-    //   
-      
-    // }
-  }
+    setTimeout(() => {
+      setturnoCrupier(true);
+      if (sumacrupier < 17) {
+        const cartanueva = numerorandom();
+        setcartasCrupier([...cartasCrupier, cartas[cartanueva]]);
+      }else{
+        setcartasCrupier([...cartasCrupier])
+      }
+    }, 400);
   };
 
   const pedirjugador = () => {
-    
     const cartanueva = numerorandom();
     setcartasJugador([...cartasJugador, cartas[cartanueva]]);
-
-    
   };
 
   return (
@@ -253,67 +274,72 @@ empate();
       }
     >
       <div className="flex min-w-full justify-center items-center ">
-       
-       {
-        turnocrupier?
-       
-        <button 
-          onClick={pedirjugador} disabled
-          className="bg-green-600 w-1/6 h-10 text-white rounded-full transition-all w-17por text-shadow fixed right-3/4 "
-        >
-          Pedir
-        </button>
-        :
-        <button 
-          onClick={pedirjugador} 
-          className="bg-green-600 w-1/6 h-10 text-white rounded-full transition-all w-17por text-shadow fixed right-3/4 "
-        >
-          Pedir
-        </button>
+        {turnocrupier ? (
+          <button
+            onClick={pedirjugador}
+            disabled
+            className="bg-green-600 w-1/6 h-10 text-white rounded-full transition-all w-17por text-shadow fixed right-3/4 "
+          >
+            Pedir
+          </button>
+        ) : (
+          <button
+            onClick={pedirjugador}
+            className="bg-green-600 w-1/6 h-10 text-white rounded-full transition-all w-17por text-shadow fixed right-3/4 "
+          >
+            Pedir
+          </button>
+        )}
 
-      }
-      <button 
-          onClick={iniciardenuevo}
-          className="bg-green-600 w-1/6 h-10 text-white rounded-full transition-all w-17por text-shadow fixed right-3/4 top-2/3 "
-        >
-          Iniciar Nuevo juego
-        </button>
+        <div className={`  ${modal?'fixed flex-direction-col animate__animated animate__jackInTheBox':'hidden '}  rounded-3xl  ${estadopartida==2?"gifperdiste":estadopartida==1?"gifganaste":"gifempate"} w-1/2 z-50 flex justify-center items-center h-1/2`}>
+          <div className="w-full h-1/2"></div>
+          <h1 className="text-white m-5 text-shadow font-semibold">{mensajemodal} </h1>
+          <button
+            onClick={iniciardenuevo}
+            className="bg-blue-600 w-3/6 h-10  text-white rounded-full transition-all w-17por text-shadow  "
+          >
+            Iniciar Nuevo juego
+          </button>
+        </div>
+
         <div className="ml-4 mr-4 flex flex-wrap border h-m imagen-verde border-gray-400 rounded-2xl w-1/3 text-white text-center justify-center">
           <div className="w-full h-1/2 p-5">
             <h2 className="font-medium text-2xl text-shadow ">Crupier</h2>
             <h3 className="font-semibold text-xl text-shadow">
-              {turnocrupier?sumacrupier:cartasCrupier[0].valor}
+              {turnocrupier ? sumacrupier : cartasCrupier[0].valor}
             </h3>
             <div className="flex items-center justify-center">
               {cartasCrupier.map((element, index) =>
-                !turnocrupier?
-                index != 1 ? (
-                  <div
-                    key={index}
-                    className={`hovercartas fixed top-1/4 left-${index}por`}
-                  >
-                    <img
+                !turnocrupier ? (
+                  index != 1 ? (
+                    <div
                       key={index}
-                      className={` ${
-                        empieza ? "animate__animated animate__flipInY  " : ""
-                      }   img-cartas shadow-black shadow shadow-2xl`}
-                      src={element.img}
-                    ></img>
-                  </div>
+                      className={`hovercartas fixed top-1/4 left-${index}por`}
+                    >
+                      <img
+                        key={index}
+                        className={` ${
+                          empieza ? "animate__animated animate__flipInY  " : ""
+                        }   img-cartas shadow-black  shadow-2xl`}
+                        src={element.img}
+                      ></img>
+                    </div>
+                  ) : (
+                    <div
+                      key={index}
+                      className={`Carta-negra hovercartas fixed top-1/4 left-${index}por`}
+                    >
+                      <img
+                        key={index}
+                        className={` ${
+                          empieza ? "animate__animated animate__flipInY  " : ""
+                        }   img-cartas shadow-black  shadow-2xl`}
+                        src={element.img}
+                      ></img>
+                    </div>
+                  )
                 ) : (
                   <div
-                    key={index}
-                    className={`Carta-negra hovercartas fixed top-1/4 left-${index}por`}
-                  >
-                    <img
-                      key={index}
-                      className={` ${
-                        empieza ? "animate__animated animate__flipInY  " : ""
-                      }   img-cartas shadow-black shadow shadow-2xl`}
-                      src={element.img}
-                    ></img>
-                  </div>
-                ):<div
                     key={index}
                     className={` hovercartas fixed top-1/4 left-${index}por`}
                   >
@@ -321,10 +347,11 @@ empate();
                       key={index}
                       className={` ${
                         empieza ? "animate__animated animate__flipInY  " : ""
-                      }   img-cartas shadow-black shadow shadow-2xl`}
+                      }   img-cartas shadow-black  shadow-2xl`}
                       src={element.img}
                     ></img>
                   </div>
+                )
               )}
             </div>
           </div>
@@ -347,7 +374,7 @@ empate();
                     key={index}
                     className={` ${
                       empieza ? "animate__animated animate__flipInY  " : ""
-                    }   img-cartas shadow-black shadow shadow-2xl`}
+                    }   img-cartas shadow-black  shadow-2xl`}
                     src={element.img}
                   ></img>
                 </div>
@@ -363,6 +390,8 @@ empate();
           Plantarse
         </button>
       </div>
+      
+      
     </div>
   );
 }
