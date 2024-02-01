@@ -5,24 +5,25 @@
     <link rel="shortcut icon" href="./src/img/blackjack.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blackjack</title>
-  </head>
-  <style>
+    <style>
 
-    @font-face {
+      @font-face {
+        font-family: casino;
+        src: url(public/GrandcasinoRegular-mLExx.otf);
+      }
+      body{
+        background: fixed url(./src/img/fondo.jpeg);
+      background-position: center  ;
+      background-size: cover;
+  
+  
       font-family: casino;
-      src: url(public/GrandcasinoRegular-mLExx.otf);
-    }
-    body{
-      background: fixed url(./src/img/fondo.jpeg);
-    background-position: center  ;
-    background-size: cover;
-
-
-    font-family: casino;
-
-
- }
-  </style>
+  
+  
+   }
+    </style>
+  </head>
+  
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

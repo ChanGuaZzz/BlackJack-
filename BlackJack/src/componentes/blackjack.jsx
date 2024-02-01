@@ -230,6 +230,7 @@ export function BlackJack({
       console.log("BLACKJACK");
       setturnoCrupier(true)
       setestadopartida(1);
+      setcartasCrupier([...cartasCrupier]);
       setMensajemodal("BlackJack");
       setTimeout(()=>{
         setmodal(true);
