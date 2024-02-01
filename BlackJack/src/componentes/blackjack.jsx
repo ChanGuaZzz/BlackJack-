@@ -199,7 +199,7 @@ empate();
 
     if (suma > 21) {
       console.log("PERDISTE TE PASASTE");
-
+      setturnoCrupier(true);
     }else if (suma == 21) {
       console.log("BLACKJACK")
       gana();
