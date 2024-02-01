@@ -2,7 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.w-17por{
+    transition: all .2s;
+}
+
 .w-17por:hover{
+
     transform: scale(1.1);
     filter: brightness(90%);
 }
@@ -18,7 +23,7 @@
 
 .imagen-verde{
 
-    background: radial-gradient(rgb(0, 177, 0),rgb(52, 114, 52));
+    background: radial-gradient(rgb(1, 124, 1),rgb(31, 68, 31));
     
 }
 .fondo-gris{
@@ -31,9 +36,14 @@
 
 
 .bg-foto{
-    background: url(img/fondo.jpeg);
-    background-position-y: -48%;
-    background-position-x: 22%;
+    background:radial-gradient(rgb(56, 56, 56),black);
+}
+.Carta-negra{
+    filter: brightness(1%);
+}
+
+.text-shadow{
+    text-shadow: 2px 2px 2px #000000;
 }
 
 .fichas{

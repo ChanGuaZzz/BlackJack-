@@ -1,3 +1,4 @@
+import "animate.css";
 import AsCorazones from "../img/ace_of_hearts.png";
 import dosCorazones from "../img/2_of_hearts.png";
 import tresCorazones from "../img/3_of_hearts.png";
@@ -56,9 +57,18 @@ import KEspadas from "../img/king_of_spades2.png";
 
 import { useEffect, useState } from "react";
 
-export function BlackJack({ visible, dinero, funcionSetDinero }) {
+export function BlackJack({
+  empieza,
+  dinero,
+  setDinero,
+  visible,
+  apuesta,
+  iniciardenuevo,
+  
+  
+}) {
   const cartas = [
-    { img: AsCorazones, valor: [1, 11] },
+    { img: AsCorazones, valor: 11 },
     { img: dosCorazones, valor: 2 },
     { img: tresCorazones, valor: 3 },
     { img: cuatroCorazones, valor: 4 },
@@ -72,7 +82,7 @@ export function BlackJack({ visible, dinero, funcionSetDinero }) {
     { img: QCorazones, valor: 10 },
     { img: KCorazones, valor: 10 },
 
-    { img: AsDiamantes, valor: [1, 11] },
+    { img: AsDiamantes, valor: 11 },
     { img: dosDiamantes, valor: 2 },
     { img: tresDiamantes, valor: 3 },
     { img: cuatroDiamantes, valor: 4 },
@@ -86,7 +96,7 @@ export function BlackJack({ visible, dinero, funcionSetDinero }) {
     { img: QDiamantes, valor: 10 },
     { img: KDiamantes, valor: 10 },
 
-    { img: AsTrebol, valor: [1, 11] },
+    { img: AsTrebol, valor: 11 },
     { img: dosTrebol, valor: 2 },
     { img: tresTrebol, valor: 3 },
     { img: cuatroTrebol, valor: 4 },
@@ -100,7 +110,7 @@ export function BlackJack({ visible, dinero, funcionSetDinero }) {
     { img: QTrebol, valor: 10 },
     { img: KTrebol, valor: 10 },
 
-    { img: AsEspadas, valor: [1, 11] },
+    { img: AsEspadas, valor: 11 },
     { img: dosEspadas, valor: 2 },
     { img: tresEspadas, valor: 3 },
     { img: cuatroEspadas, valor: 4 },
@@ -114,40 +124,126 @@ export function BlackJack({ visible, dinero, funcionSetDinero }) {
     { img: QEspadas, valor: 10 },
     { img: KEspadas, valor: 10 },
   ];
+  const numerorandom = () => {
+    const numero = Math.floor(Math.random() * cartas.length);
+    return numero;
+  };
 
-  const [cartasCrupier,setcartasCrupier] = useState([]);
-  const [cartasJugador, setcartasJugador] = useState([]);
-  const [sumacrupier,setsumacrupier]=useState(0);
-  const [sumaJugador,setsumaJugador]=useState(0);
-
-useEffect(()=>{
-  const suma = cartasCrupier.reduce((total, element) => total + element.valor, 0);
-  setsumacrupier(suma);
-},[cartasCrupier])
-  
-useEffect(()=>{
-  const suma = cartasJugador.reduce((total, element) => total + element.valor, 0);
-  setsumaJugador(suma);
-},[cartasJugador])
-
-
-
-  const numerorandom=()=>{
-    return Math.random()*cartas.length
+  const gana=()=>{
+    setDinero(dinero+(apuesta*2));
   }
-  // useEffect(()=>{
-  //   const cartainicialCrupier=numerorandom();
-  //   const cartainicialJugador=numerorandom();
-  //   setcartasCrupier([...cartasCrupier, cartas[cartainicialCrupier]]);
-  //   setcartasJugador([...cartasJugador,cartas[cartainicialJugador]]);
-  // },[])
+
+  const empate=()=>{
+    setDinero(dinero+apuesta);
+  }
+  
+
+  const [cartasCrupier, setcartasCrupier] = useState([cartas[numerorandom()]]);
+  const [cartasJugador, setcartasJugador] = useState([cartas[numerorandom()]]);
+  const [sumacrupier, setsumacrupier] = useState(0);
+  const [sumaJugador, setsumaJugador] = useState(cartasJugador.reduce(
+    (total, element) => total + element.valor,
+    0
+  ));
+  const [turnocrupier, setturnoCrupier] = useState(false);
+
+  useEffect(()=>{
+    setcartasCrupier([cartas[numerorandom()]]);
+    setcartasJugador([cartas[numerorandom()]]);
+    setsumacrupier(0);
+    setsumaJugador(cartasJugador.reduce(
+      (total, element) => total + element.valor,
+      0
+    ));
+    setturnoCrupier(false);
+  },[visible]);
 
   
 
 
+  useEffect(() => {
+    const suma = cartasCrupier.reduce(
+      (total, element) => total + element.valor,
+      0
+    );
+    setsumacrupier(suma);
+    console.log(cartasCrupier);
+    if(empieza&&turnocrupier) {
+   if(suma<17){
+pedircrupier()
+   }else{
+    if(suma>sumaJugador&&suma<=21){
+      console.log("Perdiste contra el crupier")
+
+    }else if(suma>21){
+      console.log("Ganaste, el crupier se ha pasado")
+      gana();
+    }else if(suma==sumaJugador){
+      console.log("EMPATE")
+empate();
+    }else{
+      console.log("LE HAS GANADO AL GRUPIER")
+      gana();
+    }
+   }
+  }
+  }, [cartasCrupier]);
 
 
-  
+  useEffect(() => {
+    const suma = cartasJugador.reduce(
+      (total, element) => total + element.valor,
+      0
+    );
+    setsumaJugador(suma);
+
+    if (suma > 21) {
+      console.log("PERDISTE TE PASASTE");
+
+    }else if (suma == 21) {
+      console.log("BLACKJACK")
+      gana();
+    }
+    
+  }, [cartasJugador]);
+
+  //SE EJECUTA AUTOMATICAMENTE AL INICIAR
+  useEffect(() => {
+    const cartainicialCrupier = numerorandom();
+
+    const cartainicialJugador = numerorandom();
+
+    setcartasCrupier([...cartasCrupier, cartas[cartainicialCrupier]]);
+
+    console.log(cartasCrupier[0].valor);
+  }, []);
+
+  const pedircrupier = () => {
+    
+    setturnoCrupier(true);
+    if (sumacrupier < 17) {
+      const cartanueva = numerorandom();
+      setcartasCrupier([...cartasCrupier, cartas[cartanueva]]);
+      
+    //   if (sumacrupier < 17) {
+      
+    //     pedircrupier();
+    //     console.log(cartasCrupier);
+      
+    //   
+      
+    // }
+  }
+  };
+
+  const pedirjugador = () => {
+    
+    const cartanueva = numerorandom();
+    setcartasJugador([...cartasJugador, cartas[cartanueva]]);
+
+    
+  };
+
   return (
     <div
       className={
@@ -157,18 +253,79 @@ useEffect(()=>{
       }
     >
       <div className="flex min-w-full justify-center items-center ">
-        <button className="bg-green-600 w-1/6 h-10 text-white rounded-full transition-all w-17por fixed right-3/4 ">
+       
+       {
+        turnocrupier?
+       
+        <button 
+          onClick={pedirjugador} disabled
+          className="bg-green-600 w-1/6 h-10 text-white rounded-full transition-all w-17por text-shadow fixed right-3/4 "
+        >
           Pedir
+        </button>
+        :
+        <button 
+          onClick={pedirjugador} 
+          className="bg-green-600 w-1/6 h-10 text-white rounded-full transition-all w-17por text-shadow fixed right-3/4 "
+        >
+          Pedir
+        </button>
+
+      }
+      <button 
+          onClick={iniciardenuevo}
+          className="bg-green-600 w-1/6 h-10 text-white rounded-full transition-all w-17por text-shadow fixed right-3/4 top-2/3 "
+        >
+          Iniciar Nuevo juego
         </button>
         <div className="ml-4 mr-4 flex flex-wrap border h-m imagen-verde border-gray-400 rounded-2xl w-1/3 text-white text-center justify-center">
           <div className="w-full h-1/2 p-5">
-            <h2 className="font-medium text-2xl">Crupier</h2>
-            <h3 className="font-semibold text-xl">{sumacrupier}</h3>
+            <h2 className="font-medium text-2xl text-shadow ">Crupier</h2>
+            <h3 className="font-semibold text-xl text-shadow">
+              {turnocrupier?sumacrupier:cartasCrupier[0].valor}
+            </h3>
             <div className="flex items-center justify-center">
-            {
-            cartasCrupier.map((element, index)=>(
-              <img className={`hovercartas fixed top-1/4 left-${index}por img-cartas shadow-black shadow shadow-2xl`}  src={element.img}></img>
-            ))}
+              {cartasCrupier.map((element, index) =>
+                !turnocrupier?
+                index != 1 ? (
+                  <div
+                    key={index}
+                    className={`hovercartas fixed top-1/4 left-${index}por`}
+                  >
+                    <img
+                      key={index}
+                      className={` ${
+                        empieza ? "animate__animated animate__flipInY  " : ""
+                      }   img-cartas shadow-black shadow shadow-2xl`}
+                      src={element.img}
+                    ></img>
+                  </div>
+                ) : (
+                  <div
+                    key={index}
+                    className={`Carta-negra hovercartas fixed top-1/4 left-${index}por`}
+                  >
+                    <img
+                      key={index}
+                      className={` ${
+                        empieza ? "animate__animated animate__flipInY  " : ""
+                      }   img-cartas shadow-black shadow shadow-2xl`}
+                      src={element.img}
+                    ></img>
+                  </div>
+                ):<div
+                    key={index}
+                    className={` hovercartas fixed top-1/4 left-${index}por`}
+                  >
+                    <img
+                      key={index}
+                      className={` ${
+                        empieza ? "animate__animated animate__flipInY  " : ""
+                      }   img-cartas shadow-black shadow shadow-2xl`}
+                      src={element.img}
+                    ></img>
+                  </div>
+              )}
             </div>
           </div>
           <div className="w-full h-0">
@@ -176,12 +333,33 @@ useEffect(()=>{
           </div>
 
           <div className="w-full h-1/2 p-5">
-            <h1>Tu</h1>
-            <h3 className="font-semibold text-xl">{sumacrupier}</h3>
+            <h1 className="text-shadow font-medium text-2xl">Tu</h1>
+            <h3 className="font-semibold text-xl text-shadow ">
+              {sumaJugador}
+            </h3>
+            <div className="flex items-center justify-center">
+              {cartasJugador.map((element, index) => (
+                <div
+                  key={index}
+                  className={`hovercartas fixed top-2/3 left-${index}por`}
+                >
+                  <img
+                    key={index}
+                    className={` ${
+                      empieza ? "animate__animated animate__flipInY  " : ""
+                    }   img-cartas shadow-black shadow shadow-2xl`}
+                    src={element.img}
+                  ></img>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        <button className="bg-red-600 w-1/6 h-10 text-white rounded-full transition-all w-17por fixed left-3/4">
+        <button
+          onClick={pedircrupier}
+          className="bg-red-600 w-1/6 h-10 text-white rounded-full transition-all w-17por fixed left-3/4 text-shadow"
+        >
           Plantarse
         </button>
       </div>
