@@ -50,6 +50,9 @@ function App() {
   return (
     <>
     <h1 className="text-center text-white text-5xl m-1 text-shadow">BlackJack</h1>
+     {empieza&&
+     <h1 className="text-center text-yellow-400 text-xl m-1 text-shadow">Apuesta: {apuesta}<div className="text-green-400">Ganancia:{apuesta*2} </div>   </h1>
+     } 
       {/* INICIO APUESTA */}
 
       {sindinero?

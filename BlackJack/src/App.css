@@ -95,6 +95,7 @@
 
 .hovercartas{
     transition: all .2s;
+    cursor: pointer;
 }
 .hovercartas:hover{
     transform: scale(1.1);
