@@ -21,8 +21,6 @@ run:
 npm run dev
 ```
 ### WebSite
-```bash
-    https://blackjack.kesug.com
-```
+[Link text]( https://blackjack.kesug.com)
 
 
